@@ -6,8 +6,8 @@
     "start": "node app.js"
   },
   "engines": {
-    "node": "6.11.0",
-    "npm": "3.10.10"
+    "node": "8.11.0",
+    "npm": "6.3.0"
   },
   "dependencies": {
     "ava": "^0.22.0",
