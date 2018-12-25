@@ -169,7 +169,7 @@ module.exports = router =>  {
         secure: false,
         auth: {
           user: "manoj.savaram@rapidqube.com",
-          pass: "M$Hpqb$2018"
+          pass: "Qwerty!@#890"
         }
       });
     //	var remoteHost = "8082"
