@@ -172,66 +172,29 @@ module.exports = router =>  {
           pass: "Qwerty!@#890"
         }
       });
-    //	var remoteHost = "8082"
+    
        var link = "http://localhost:8082/email/verify?mail=" + encodedMail;
-      // console.log(link);
-    
-      // var mailOptions = {
-      // 	transport: transporter,
-      // 	from: "Aman Services" + "<manoj.savaram@rapidqube.com>",
-      // 	to: req.body.email,
-      // 	subject: 'Saned Service-Email Verification',
-    
-      //   html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
-    
-      // };
-    // transporter.sendMail(mailOptions, function(err, info){
-    // if(err){}
-    //  // res.send({Message:"Please check your email"})
-    // });
+     
     var mailOptions = {
       transport: transporter,
-      from: "Aman Services" + "<manoj.savaram@rapidqube.com>",
+      from: "Saned Services" + "<manoj.savaram@rapidqube.com>",
       to: req.body.email,
       subject: 'Saned Service-OTP Verification',
     
-      html: "Email confirmation from Aman services,<br> Your one time password is.<br> " + otp + "<br>" +
+      html: "Email confirmation from Saned services,<br> Your one time password is.<br> " + otp + "<br>" +
         "تأكيد بالبريد الإلكتروني من خدمات أمان ، <br> Your One time password is. <br>" + otp
     
     };
     transporter.sendMail(mailOptions, (error, info) => {
-      // console.log(info, "information")
-      // res.send({
-      //   Message: "please check your email for one time password",
-      //   الرسالة: "الرجاء التحقق من بريدك الإلكتروني لـ otp"
-      // })
+      
       if (error) {
         console.log("Mail send error: ", error);
       }
-    //});
+  
     var phonetosend = req.body.phone;
       console.log(phonetosend)
     
-    //   var otp = "";
-    //   var possible = "0123456789";
-     
-    //   for (var i = 0; i<4; i++)
-    //       otp += possible.charAt(Math.floor(Math.random() * possible.length));
-    //   console.log("otp" + otp);
-    //   //logger.fatal('OTP getting generate'+ '-->' +otp);
-    //   sendOtp.send(phonetosend, "Sanad", otp, function (error, data, response) {
-    //       console.log(data,"wow");
-    //      // console.log("response",response)
-    //       console.log(otp,"otp")
-    //       var otptosend = 'your otp is ' + otp;
-    //   console.log("your otp is",otp)
-    //   //sendOtp.setOtpExpiry('5');
-     
-       
-    //     if(data.type == 'success') {
-    //       console.log('OTP verified successfully');
-    //   // res.send(otptosend)
-    // }
+    
     var sql = "SELECT id FROM types WHERE type_name = '" + type_name + "'";
     con.query(sql, function (err, result) {
       if (err) throw err;
@@ -266,6 +229,180 @@ module.exports = router =>  {
     })
     
     });
+    //==================================supplierregistration============================//
+    router.post('/supplier-registration', async (req, res) => {
+      var uae_trade_license_no= req.body.uae_trade_license_no;
+      // var trade_license_validity=req.body.trade_license_validity;
+      // var product_services_type= req.body.product_services_type;
+      var company_name= req.body.company_name;
+      var reg_office_add=req.body.reg_office_add;
+      var contact_no=req.body.contact_no;
+      var fax_no=req.body.fax_no;
+
+
+      var company_email_id=req.body.company_email_id;
+      var website_add=req.body.website_add;
+      var contact_name=req.body.contact_name;
+      var contact_position=req.body.contact_position;
+      var contact_no_mobile=req.body.contact_no_mobile;
+      var contact_email_id=req.body.contact_email_id;
+      var type_name= "supplier";
+      var verify_email ="N";
+      var verify_mobile ="N";
+     
+
+
+
+      var sql = "SELECT  * FROM supplier where contact_email_id ='" + contact_email_id + "'";
+      dbFunc.connectionRelease;    
+      con.query(sql, function (err, result) {
+      console.log("result",result);
+      console.log(result.length != 0);
+      //if (err) throw err;
+      dbFunc.connectionRelease;
+      if(result.length != 0){
+      res.send({
+        "status":false,
+        "Message":"User Already Registered",
+                الرسالة: "مستخدم مسجل بالفعل",
+               
+      })
+      dbFunc.connectionRelease;
+      }
+      //});
+      else{	
+        // sendOtp.setOtpExpiry('10'); //in minutes
+      console.log("new");
+        var otp = "";
+        var possible = "0123456789";
+        for (var i = 0; i < 4; i++)
+          otp += possible.charAt(Math.floor(Math.random() * possible.length));
+        // var remoteHost = "192.168.0.29:3000";
+        // console.log(remoteHost);
+      
+       // var encodedMail = new Buffer(req.body.contact_email_id).toString('base64');
+        //var link = "http://" + remoteHost + "/marine/user/verify?mail=" + email;
+        
+      //var 	emailtosend = email;
+        var transporter = nodemailer.createTransport({
+          host: 'smtp.office365.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: "kavitha.rajasekaran@rapidqube.com",
+            pass: "Avanthika1981"
+          }
+        });
+      console.log("before link")
+         var link = "mail";
+       
+      var mailOptions = {
+        transport: transporter,
+        from: "Saned Services" + "<kavitha.rajasekaran@rapidqube.com>",
+        to: contact_email_id,
+        subject: 'Saned Service-OTP Verification',
+      
+        html: "Email confirmation from Saned services,<br> Your one time password is.<br> " + otp + "<br>" +
+          "تأكيد بالبريد الإلكتروني من خدمات أمان ، <br> Your One time password is. <br>" + otp
+      
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        
+        if (error) {
+          console.log("Mail send error: ", error);
+        }
+    
+      // var phonetosend = req.body.phone;
+      //   console.log(phonetosend)
+        var email_verify_link=link;
+      console.log("hai");
+      
+      var sql = "SELECT * FROM types WHERE type_name = '" + type_name + "'";
+      con.query(sql, function (err, result) {
+        if (err) throw err;
+        dbFunc.connectionRelease;
+        logger.fatal("DataBase ERR:",err)
+        console.log("user_id",result[0].id)
+        var product_services_type = result[0].id;
+        var sql = "INSERT INTO supplier (uae_trade_license_no,trade_license_validity,product_services_type,company_name,reg_office_add,contact_no,fax_no,company_email_id,website_add,contact_name,contact_position,contact_no_mobile,contact_email_id,otp,email_verify_link,verify_mobile,verify_email)  VALUES ('" + uae_trade_license_no + "','" + date.format(now, 'YYYY/MM/DD HH:mm:ss') +"','" + product_services_type + "','" + company_name + "','" +reg_office_add + "','" + contact_no + "','" + fax_no + "','" + company_email_id + "','" + website_add + "','" + contact_name + "','" + contact_position + "', '" + contact_no_mobile + "', '" + contact_email_id + "','" + otp + "','" + email_verify_link + "','" + verify_mobile + "','" + verify_email + "');"
+        con.query(sql, function (err, result) {
+      if (err) throw err;
+      dbFunc.connectionRelease;
+      logger.fatal("DataBase ERR:",err)
+      console.log(result,"inserted.......")
+      res.send({
+          Message: "please check your email for one time password",
+          الرسالة: "الرجاء التحقق من بريدك الإلكتروني لـ otp"
+        })
+      dbFunc.connectionRelease;
+                   })
+       
+         
+      })
+      
+      
+      
+        
+        
+      
+      });
+      }
+      
+      })
+      
+      });
+      //========================supplieremailverification===========================//
+      
+router.get("/email/verify", cors(), (req, res, next) => {
+
+	var querymail = req.query.mail;
+	console.log("URL: " + querymail);
+	var verify_email = "Y"
+	var sql ="UPDATE supplier SET verify_email = '" + verify_email + "' WHERE email_id = '" + querymail + "'";
+            con.query(sql, function (err) {
+              if (err) throw err;
+              res.send({Message:"You Are Successfully Registred",
+              الرسالة: "أنت مسجل بنجاح"
+              });
+              dbFunc.connectionRelease;
+            });
+   });
+   //=================================supplierotpverification========================//
+   router.post("/supplieremailotpverification", cors(), (req, res) => {
+    var otp = req.body.otp;
+    var contact_email_id = req.body.email_id;
+  console.log(otp);
+  
+  con.query("SELECT * FROM supplier where contact_email_id='" + contact_email_id+ "'",  function(error, results, fields) {
+      if (error) {
+          res.send({
+              "status": false,
+              "message": "error"
+          })
+      } else {
+          // var results = JSON.parse(JSON.stringify(results));
+          console.log(results,"supplierotpverify");
+          if (results.length > 0) {
+              if (results[0].otp === otp) {
+                  console.log(otp);
+                  results[0].verify_email = "Y"
+                  console.log(results[0].uid);
+                  con.query("UPDATE supplier SET verify_email = '" + results[0].verify_email + "' WHERE email_id = '" + results[0].contact_email_id + "'",  function(error, results, fields) {});
+  
+                  res.send({
+                      status: "true",
+                      "message": "one time password is verified"
+                  });
+              }} else {
+                  res.send({
+                      status: "false",
+                      "message": "Invalid one time password"
+                  });
+              }
+          // }
+      }
+  });
+  });
     
 //=============================email verification======================================================//
 router.get("/email/verify", cors(), (req, res, next) => {
@@ -291,7 +428,7 @@ router.post('/login',cors(),function(req,res) {
   logger.fatal("Entering into Login Service")
   var loginrequest = req.body;
   console.log("request",loginrequest)
-  var email_id = req.body.email_id;
+  var email_id = req.body.email;
   
  var password = req.body.password;
 
@@ -450,12 +587,13 @@ router.post("/emailotp", (req, res) => {
 router.post('/forgetpassword',(req,res) =>{
     
     let forgetpassword = req.body;
-    let password = req.body.password;
+    console.log("body",forgetpassword);
+    let password = req.body.passwordvaalue;
     console.log(password)
     let confirmpassword = req.body.confirmpassword;
-    let username = req.body.email_id;
+    let username = req.body.emailvalue;
     console.log(username)
-            let sql = "SELECT  password,email_id FROM Residents where email_id ='" + username + "'";
+            let sql = "SELECT * FROM Residents where email_id ='" + username + "'";
           
             con.query(sql, function (err, result) {
              // logger.fatal(result,"select")
@@ -476,13 +614,7 @@ router.post('/forgetpassword',(req,res) =>{
       }
       else{
         
-      
-    
-      //else{
-       
-        
-             
-              // console.log(result[0])
+   
                if(cryptr.decrypt(result[0].password) == password ){
 
               res.send({
@@ -493,24 +625,112 @@ router.post('/forgetpassword',(req,res) =>{
               }
             // });
             else{
-            console.log(password,"try")
-            password = cryptr.encrypt(req.body.password);
-           console.log(password);
-            var sql ="UPDATE Residents SET password = '" + password + "' WHERE email_id = '" + username + "'";
+              var otp = "";
+              var possible = "0123456789";
+              var namea;
+              var namen;
+              for (var i = 0; i < 4; i++)
+                otp += possible.charAt(Math.floor(Math.random() * possible.length));
+         
+            
+              var encodedMail = new Buffer(req.body.emailvalue).toString('base64');
+              let sql = "SELECT * FROM Residents where email_id ='" + username + "'";
+              con.query(sql,function (err,result){
+                if (err) throw err;
+                dbFunc.connectionRelease;
+                 namen=result[0].name_en;
+                 namea=result[0].name_ar;
+
+            //  })
+             console.log("datanames",result[0].name_en);
+             console.log(result[0].name_ar);
+             console.log("copy",namen);
+              var transporter = nodemailer.createTransport({
+                host: 'smtp.office365.com',
+                port: 587,
+                secure: false,
+                auth: {
+                  user: "manoj.savaram@rapidqube.com",
+                  pass: "Qwerty!@#890"
+                }
+              });
+             var mailOptions = {
+              transport: transporter,
+              from: "Saned Services" + "<manoj.savaram@rapidqube.com>",
+              to: req.body.emailvalue,
+              subject: 'Saned Service-OTP Verification',
+            
+              html: "Dear  "+ result[0].name_en +"<br>Your one Time Password for forgotPassword recovery for Saned services,<br> Your one time password is.<br> " + otp + "<br>" +
+                "كلمة المرور الخاصة بك مرة واحدة نسيت استرداد كلمة المرور لخدمات Saned" + namea + "  العزيز,<br> Your One time password is. <br> " + otp +"<br>"
+            
+            };
+          
+            transporter.sendMail(mailOptions, (error, info) => {
+             
+              if (error) {
+                console.log("Mail send error: ", error);
+              }
+            })
+              var sql ="UPDATE Residents SET otp = '" + otp + "' WHERE email_id = '" + username + "'";
+          //   console.log(password,"try")
+          //   password = cryptr.encrypt(req.body.password);
+          //  console.log(password);
+           
+          //   var sql ="UPDATE Residents SET password = '" + password + "' WHERE email_id = '" + username + "'";
             con.query(sql, function (err) {
               if (err) throw err;
               dbFunc.connectionRelease;
               logger.fatal("DataBase ERR:",err)
-              res.send({Message:"password is updated",
-              رسالة:"تم تحديث كلمة المرور"});
+              res.send({Message:"Please check your mail for One time Password",
+              رسالة:"يرجى التحقق من بريدك مرة واحدة لكلمة المرور"});
             });
-            dbFunc.connectionRelease;
+           dbFunc.connectionRelease;
+          })
           }
         }
       }
           
     } );
 });
+  //========================forgetpassword-otp===============================//
+  router.post("/forgetotpverification", cors(), (req, res) => {
+    var otp = req.body.otp;
+    var password = cryptr.encrypt(req.body.password)
+    
+  console.log(otp);
   
+  con.query("SELECT * FROM Residents where otp='" + otp+ "'",  function(error, results, fields) {
+      if (error) {
+          res.send({
+              "status": false,
+              "message": "error"
+          })
+      } else {
+          // var results = JSON.parse(JSON.stringify(results));
+          console.log(results,"logesh");
+          if (results.length > 0) {
+              if (results[0].otp === otp) {
+                  console.log(otp);
+                  // results[0].verify_email = "Y"
+                  // console.log(results[0].uid);
+                  con.query("UPDATE Residents SET password = '" + password + "' WHERE otp = '" + otp + "'",  function(error, results, fields) {});
+  
+                  res.send({
+                      status: "true",
+                      "message": "one time password is verified and Password updated successfully"
+                  });
+              } else {
+                  res.send({
+                      status: "false",
+                      "message": "Invalid one time password"
+                  });
+              }
+           }
+      }
+  });
+  });
+  
+  
+  //==========================forgetotpend===================================//
 
 }
