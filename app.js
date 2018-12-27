@@ -3,19 +3,19 @@
 @author: kavitha And Manoj
 @version: 1.0
 @date: 09/12/2018
-@Description: sanad project
+@Description: saned project
 **/
 //this is the start of the application 
 'use strict';
 
 const express = require('express');
-const mysql = require('mysql');
 const app = express();
 const bodyParser = require('body-parser');
 const router = express.Router();
 var log4js = require('log4js');
 var con = require('./config/Connection.js');
 var path = require('path');
+var swal = require('sweetalert')
 log4js.configure({
   appenders: {
     Aman_project: { type: 'dateFile', filename: './log/Aman_Project_'+ new Date().getFullYear() + "-"+ (new Date().getMonth()+ 1) + "-"+ new Date().getDate()+'.log'}
@@ -36,6 +36,11 @@ app.use(function(req, res, next) {
   next();
 })
 
+// app.set('views', __dirname + '/views');
+// app.set('view engine', 'pug');
+app.engine('pug', require('pug').__express)
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug')
 
 app.use(bodyParser.urlencoded({
     extended: true

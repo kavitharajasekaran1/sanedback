@@ -168,16 +168,16 @@ module.exports = router =>  {
         port: 587,
         secure: false,
         auth: {
-          user: "manoj.savaram@rapidqube.com",
-          pass: "Qwerty!@#890"
+          user: "kavitha.rajasekaran@rapidqube.com",
+          pass: "Avanthika1981"
         }
       });
     
-       var link = "http://localhost:8082/email/verify?mail=" + encodedMail;
+       var link = "http://localhost:8083/email/verify?mail=" + encodedMail;
      
     var mailOptions = {
       transport: transporter,
-      from: "Saned Services" + "<manoj.savaram@rapidqube.com>",
+      from: "Saned Services" + "<kavitha.rajasekaran@rapidqube.com>",
       to: req.body.email,
       subject: 'Saned Service-OTP Verification',
     
@@ -231,6 +231,7 @@ module.exports = router =>  {
     });
     //==================================supplierregistration============================//
     router.post('/supplier-registration', async (req, res) => {
+      console.log(req.body);
       var uae_trade_license_no= req.body.uae_trade_license_no;
       // var trade_license_validity=req.body.trade_license_validity;
       // var product_services_type= req.body.product_services_type;
@@ -405,7 +406,7 @@ router.get("/email/verify", cors(), (req, res, next) => {
   });
     
 //=============================email verification======================================================//
-router.get("/email/verify", cors(), (req, res, next) => {
+router.get("/email/verifyResi", cors(), (req, res, next) => {
 
 	var querymail = req.query.mail;
 	console.log("URL: " + querymail);
@@ -413,11 +414,14 @@ router.get("/email/verify", cors(), (req, res, next) => {
 	var sql ="UPDATE Residents SET verify_email = '" + verify_email + "' WHERE email_id = '" + querymail + "'";
             con.query(sql, function (err) {
               if (err) throw err;
-              res.send({Message:"You Are Successfully Registred",
-              الرسالة: "أنت مسجل بنجاح"
-              });
-              dbFunc.connectionRelease;
-            });
+            
+            else{
+              res.render('index');
+            }
+          });
+            
+            
+
 	
 		   
 				//res.send({"status": true, "message": "Registration Successful"})
@@ -553,8 +557,8 @@ router.post("/emailotp", (req, res) => {
 		port: 587,
 		secure: false,
 		auth: {
-			user: "manoj.savaram@rapidqube.com",
-			pass: "M$Hpqb$2018"
+			user: "kavitha.rajasekaran@rapidqube.com",
+			pass: "Avanthika1981"
 		}
 	});
 	var remoteHost = "119.81.59.59:8000"
@@ -563,7 +567,7 @@ router.post("/emailotp", (req, res) => {
 
 	var mailOptions = {
 		transport: transporter,
-		from: "Aman Services" + "<manoj.savaram@rapidqube.com>",
+		from: "Aman Services" + "<kavitha.rajasekaran@rapidqube.com>",
 		to: req.body.email,
 		subject: 'Saned Service-OTP Verification',
 
@@ -650,13 +654,13 @@ router.post('/forgetpassword',(req,res) =>{
                 port: 587,
                 secure: false,
                 auth: {
-                  user: "manoj.savaram@rapidqube.com",
-                  pass: "Qwerty!@#890"
+                  user: "kavitha.rajasekaran@rapidqube.com",
+                  pass: "Avanthika1981"
                 }
               });
              var mailOptions = {
               transport: transporter,
-              from: "Saned Services" + "<manoj.savaram@rapidqube.com>",
+              from: "Saned Services" + "<kavitha.rajasekaran@rapidqube.com>",
               to: req.body.emailvalue,
               subject: 'Saned Service-OTP Verification',
             
@@ -733,4 +737,162 @@ router.post('/forgetpassword',(req,res) =>{
   
   //==========================forgetotpend===================================//
 
+  //=================================================newsletter=======================//
+  router.post('/newsletter-Residents', async (req, res) => {
+    console.log(req.body);
+    var email_id = req.body.email_id;
+    var sql = "SELECT  * FROM Residents where email_id ='" + email_id + "'";
+
+
+    con.query(sql, function (err, result) {
+      console.log("result",result);
+      console.log(result.length != 0);
+      //if (err) throw err;
+      dbFunc.connectionRelease;
+      if(result.length != 0){
+        var otp = "";
+        var possible = "0123456789";
+        for (var i = 0; i < 4; i++)
+          otp += possible.charAt(Math.floor(Math.random() * possible.length));
+        // var remoteHost = "192.168.0.29:3000";
+        // console.log(remoteHost);
+      
+        var encodedMail = new Buffer(req.body.email_id).toString('base64');
+        //var link = "http://" + remoteHost + "/marine/user/verify?mail=" + email;
+        console.log("code",encodedMail);
+      //var 	emailtosend = email;
+        var transporter = nodemailer.createTransport({
+          host: 'smtp.office365.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: "kavitha.rajasekaran@rapidqube.com",
+            pass: "Avanthika1981"
+          }
+        });
+      
+         var link = 'http://localhost:8083/email/verifyResi?mail=' + email_id;
+       
+      var mailOptions = {
+        transport: transporter,
+        from: "Saned Services" + "<kavitha.rajasekaran@rapidqube.com>",
+        to: req.body.email_id,
+        subject: 'Saned Service-OTP Verification',
+      
+        html: "Dear "+ result[0].name_en +"<br>You are successfully subscribe to SANED newsletter.<br>Should you wish to unsubscribe the newsletter, here is the link to do so.<br>" +link+ "<br>Best Regards,<br>"+"SANED Team."
+      
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        
+        if (error) {
+          console.log("Mail send error: ", error);
+        }
+      })
+      var verify_email ="Y"
+      var sql ="UPDATE Residents SET verify_email = '" + verify_email + "' WHERE email_id = '" + email_id + "'";
+      con.query(sql, function (err) {
+        if (err) throw err;
+      })
+        
+
+      res.send({
+        "status":false,
+        "Message":"successfully subscribed for newsletter",
+                الرسالة: "مستخدم مسجل بالفعل",
+               
+      })
+      dbFunc.connectionRelease;
+      }
+    
+  
+      else{
+        res.send({
+          "status":true,
+          "Message":"Please Register"
+        })
+
+
+      }
+    })
+  })
+//==============================newslettersupplierend===================================================//
+//=================================================newsletter=======================//
+router.post('/newsletter-supplier', async (req, res) => {
+  var email_id = req.body.email_id;
+  var sql = "SELECT  * FROM Residents where email_id ='" + email_id + "'";
+
+
+  con.query(sql, function (err, result) {
+    console.log("result",result);
+    console.log(result.length != 0);
+    //if (err) throw err;
+    dbFunc.connectionRelease;
+    if(result.length != 0){
+      var otp = "";
+      var possible = "0123456789";
+      for (var i = 0; i < 4; i++)
+        otp += possible.charAt(Math.floor(Math.random() * possible.length));
+      // var remoteHost = "192.168.0.29:3000";
+      // console.log(remoteHost);
+    
+      var encodedMail = new Buffer(req.body.email_id).toString('base64');
+      //var link = "http://" + remoteHost + "/marine/user/verify?mail=" + email;
+      
+    //var 	emailtosend = email;
+      var transporter = nodemailer.createTransport({
+        host: 'smtp.office365.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: "kavitha.rajasekaran@rapidqube.com",
+          pass: "Avanthika1981"
+        }
+      });
+    
+       var link = "http://localhost:8083/email/verify?mail=" + encodedMail;
+     
+    var mailOptions = {
+      transport: transporter,
+      from: "Saned Services" + "<kavitha.rajasekaran@rapidqube.com>",
+      to: req.body.email_id,
+      subject: 'Saned Service-OTP Verification',
+    
+      html: "Dear "+ result[0].name_en +"<br>You are successfully subscribe to SANED newsletter.<br>Should you wish to unsubscribe the newsletter, here is the link to do so.<br>" +link+ "<br>Best Regards,<br>"+"SANED Team."
+
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      
+      if (error) {
+        console.log("Mail send error: ", error);
+      }
+    })
+    var verify_email ="Y"
+    var sql ="UPDATE supplier SET verify_email = '" + verify_email + "' WHERE email_id = '" + email_id + "'";
+    con.query(sql, function (err) {
+      if (err) throw err;
+    })
+      
+
+    res.send({
+      "status":false,
+      "Message":"successfully subscribed for newsletter",
+              الرسالة: "مستخدم مسجل بالفعل",
+             
+    })
+    dbFunc.connectionRelease;
+    }
+  
+
+    else{
+      res.send({
+        "status":true,
+        "Message":"Please Register"
+      })
+
+
+    }
+  })
+})
+
+//==============================nessupplierend=========================================================//
 }
